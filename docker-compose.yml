@@ -1,0 +1,24 @@
+version: "3.9"
+
+services:
+  api:
+    build: .
+    container_name: lab4pd_api
+    ports:
+      - "8000:8000"
+    networks:
+      - lab4net
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7-alpine
+    container_name: lab4pd_redis
+    ports:
+      - "6379:6379"
+    networks:
+      - lab4net
+
+networks:
+  lab4net:
+    driver: bridge
