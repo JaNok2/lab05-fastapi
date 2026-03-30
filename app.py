@@ -4,10 +4,11 @@ from fastapi.exceptions import RequestValidationError
 from pydantic import BaseModel
 from sklearn.linear_model import LogisticRegression
 import numpy as np
+import os
 
 app = FastAPI()
 
-#dane treningowe
+# dane treningowe
 X = np.array([
     [1.0, 2.0],
     [1.5, 1.8],
@@ -19,7 +20,7 @@ X = np.array([
 
 y = np.array([0, 0, 1, 1, 0, 1])
 
-#trenowanie modelu
+# trenowanie modelu
 model = LogisticRegression()
 model.fit(X, y)
 
@@ -50,11 +51,14 @@ def predict(data: InputData):
 
 @app.get("/info")
 def info():
+    appEnv = os.getenv("APP_ENV", "local")
+
     return {
         "modelType": "LogisticRegression",
         "numberOfFeatures": X.shape[1],
         "numberOfClasses": len(model.classes_),
-        "classes": model.classes_.tolist()
+        "classes": model.classes_.tolist(),
+        "appEnv": appEnv
     }
 
 @app.get("/health")
